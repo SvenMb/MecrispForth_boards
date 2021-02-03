@@ -1,6 +1,7 @@
 # Mecrisp forth for stm32f407vet6 black board
 
- 
+I have modified the forth-kernel to use the correct serial port uart1 on this board, I also enabled all the interupts dor forth use.
+Thanks to Mathias Koch (the creator of mecrisp stellaris) this was very easy.
 
 ## Demo for fsmc TFT-display and onboard RTC
 
