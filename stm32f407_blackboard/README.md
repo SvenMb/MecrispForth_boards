@@ -3,6 +3,10 @@
 I have modified the forth-kernel to use the correct serial port uart1 on this board, I also enabled all the interupts dor forth use.
 Thanks to Mathias Koch (the creator of mecrisp stellaris) this was very easy.
 
+## Driver for supplied FSMC-display
+
+There is an nice TFT-display with touch avaiable for this board. I wrote forth words (driver) for that.
+
 ## Demo for fsmc TFT-display and onboard RTC
 
 Please set time and date according to documentation in rtc.fs.
