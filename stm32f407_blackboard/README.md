@@ -14,6 +14,10 @@ serial connection:
 
 ## install via usb with dfu-util
 
+I am recommending folie from Jean Claude Wippler as connection tool to the board. 
+He descibed this tool here: https://jeelabs.org/article/1718b/
+Currently it is hosted inside this archive: https://github.com/jcw/jcw.github.io/blob/main/zips/embello-2020-03-31.zip)
+
 ```bash
 \ flash forth kernel
 sudo dfu-util  -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force -D stm32f407-ra/mecrisp-stellaris-stm32f407.bin
@@ -58,8 +62,7 @@ Code:
 21 3 02 03 rtc-set-date
 ```
 
-Then import demo.fs via folie and start demo. (Folie: https://jeelabs.org/article/1718b/ currently hosted inside: https://github.com/jcw/jcw.github.io/blob/main/zips/embello-2020-03-31.zip)
-```forth
+Then import demo.fs via folie and start demo. 
 !s demo.fs
 demo
 ```
