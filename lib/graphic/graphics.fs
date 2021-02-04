@@ -1,6 +1,5 @@
 \ graphics primitives
 \ adapted from mecrisp-stellaris 2.2.1a (GPL3)
-\ this is a stripped down version of Jean Claude Wipplers libs
 \ needs these words:
 \ : clear ( -- ) ;
 \ : putpixel ( x y -- ) ;
