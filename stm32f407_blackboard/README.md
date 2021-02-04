@@ -15,7 +15,8 @@ serial connection:
 ## install via usb with dfu-util
 
 ```bash
-sudo dfu-util  -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force -D stm32f407-ra/mecrisp-stellaris-stm32f407.bin \ for minimal forth
+\ flash forth kernel
+sudo dfu-util  -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force -D stm32f407-ra/mecrisp-stellaris-stm32f407.bin
 
 # start serial connection to board, choose correct port when asked
 folie -r 
