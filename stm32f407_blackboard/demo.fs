@@ -7,22 +7,22 @@
 
 [ifdef] rtc-init
     : rtcisr
-	$0400 rtc_isr bit@ not if \ check if new second
-	    exit
-	then
-	1 22 lshift exti_pr bit@ not if \ check if new second
-	    exit
-	then
-	rtc-get-time ftime 254 223 drawstring
-	rtc-get-date fdate 254 232 drawstring
-	[ifdef] LED0
-	    LED0 iox!
-	[then]
-	[ifdef] LED1
-	    LED1 iox!
-	[then]
-	$0400 rtc_isr bic! \ reset wakeup flag
-	1 22 lshift exti_pr bis! \ reset bit in exti
+        $0400 rtc_isr bit@ not if \ check if new second
+            exit
+        then
+        1 22 lshift exti_pr bit@ not if \ check if new second
+            exit
+        then
+        rtc-get-time ftime 254 223 drawstring
+        rtc-get-date fdate 254 232 drawstring
+        [ifdef] LED0
+            LED0 iox!
+        [then]
+        [ifdef] LED1
+            LED1 iox!
+        [then]
+        $0400 rtc_isr bic! \ reset wakeup flag
+        1 22 lshift exti_pr bis! \ reset bit in exti
     ;
 [then]
 
@@ -96,39 +96,39 @@
     $00 $00 $00 rgb2tft  220 201 259 219 rect
 
     [ifdef] rtc-init
-	[ifdef] LED0
-	    omode-od LED0 io-mode!
-	    LED0 ios!
-	[then]
-	[ifdef] LED1
-	    omode-od LED1 io-mode!
-	    LED1 ioc!
-	[then]
-	$0000 241 221 319 239 rect
-	rtc-get-time ftime 254 223 drawstring
-	rtc-get-date fdate 254 232 drawstring
+        [ifdef] LED0
+            omode-od LED0 io-mode!
+            LED0 ios!
+        [then]
+        [ifdef] LED1
+            omode-od LED1 io-mode!
+            LED1 ioc!
+        [then]
+        $0000 241 221 319 239 rect
+        rtc-get-time ftime 254 223 drawstring
+        rtc-get-date fdate 254 232 drawstring
 
-	rtc-init
-	CR ." RTC initialised"
-	['] rtcisr irq-rtc ! \ write my isr to irq vector tab
-	3 nvic-enable
-	1 22 lshift exti_rtsr bis!
-	1 22 lshift exti_imr bis! 
-	
-	CR ." disable wakeup"
-	$0400 rtc_cr bic! \ disable wakeup
-	begin
-	    $0004 rtc_isr bit@ 
-	until
-	CR ." set count to 1s"
-	0 rtc_wutr h!            \ only count to 1 
-	$0004 rtc_cr bis!        \ enable second wakeup rtc-cr
-	CR ." enable wakeup RTC-irq"
-	$0400 rtc_cr bis!        \ enable wakeup timer
-	$4000 rtc_cr bis!        \ enable wakeup timer irq
-	CR ." reset wakup flag"
-	$0400 rtc_isr bic!       \ reset wakeup flag
-	CR ." done"
+        rtc-init
+        CR ." RTC initialised"
+        ['] rtcisr irq-rtc ! \ write my isr to irq vector tab
+        3 nvic-enable
+        1 22 lshift exti_rtsr bis!
+        1 22 lshift exti_imr bis! 
+        
+        CR ." disable wakeup"
+        $0400 rtc_cr bic! \ disable wakeup
+        begin
+            $0004 rtc_isr bit@ 
+        until
+        CR ." set count to 1s"
+        0 rtc_wutr h!            \ only count to 1 
+        $0004 rtc_cr bis!        \ enable second wakeup rtc-cr
+        CR ." enable wakeup RTC-irq"
+        $0400 rtc_cr bis!        \ enable wakeup timer
+        $4000 rtc_cr bis!        \ enable wakeup timer irq
+        CR ." reset wakup flag"
+        $0400 rtc_isr bic!       \ reset wakeup flag
+        CR ." done"
     [then]
 ;
 

@@ -1,24 +1,48 @@
 # Mecrisp forth for stm32f407vet6 black board (with optional ili9341 fsmc tft display)
 
+This compilation adds words and definitions and makes it easier to use the hardware of that board.
+
 ## console connection
 
 serial connection:
  - USART1 PA9 - TX, PA10 - RX (extra serial header)
- 
-usb-connection is work in progress 
+
+(usb-connection is currently not implemented)
+
+## install via usb with dfu-util
+
+```bash
+sudo dfu-util  -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force -D stm32f407-ra/mecrisp-stellaris-stm32f407.bin \ for minimal forth
+
+# start serial connection to board, choose correct port when asked
+folie -r 
+
+\ load drivers into flash:
+compiletoflash
+\ words for most board hardware:
+!s myinit.fs
+\ optional words for fsmc tft:
+!s myinit_tft.fs
+compiletoram
+```
 
 ## Driver for supplied FSMC-display
 
 There is an nice TFT-display with touch avaiable for this board. I wrote forth words (driver) for that.
 
-hardware driver:
+**hardware driver:**
  - lib/ili9341_fsmc.fs 
- 
-line/ellipse/circle:
+(made by me)
+
+**line/ellipse/circle:**
  - ../lib/graphic/graphics.fs
- 
-character writer:
+(derived from mecrisp:/common/graphics.txt)
+
+**character writer with 8x6 font:**
  - lib/font8x6.fs 
+(font and words are derived from jcw-flib:/mecrisp/graphics.txt, adaptation/optimisation to this tft done by me)
+
+(touch sensor is currently not implemented)
 
 ## Demo for fsmc TFT-display and onboard RTC
 
@@ -37,5 +61,5 @@ demo
 ```
 
 You should get the following output:
-![demo.fs output](img/IMG_20210203_212411.jpg)
+![demo.fs output](img/demo.jpg)
 

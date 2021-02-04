@@ -6,7 +6,7 @@
 \ very small changes by Sven Muehlberg 2021 for black board
 \ no warranties of any kind
 
-$40023800 constant RCC_Base
+\ $40023800 constant RCC
  
 \ $40023C00 constant Flash_ACR \ Flash Access Control Register
 \ $40004408 constant USART2_BRR
@@ -20,7 +20,7 @@ $40023800 constant RCC_Base
   1 24 lshift constant PLLON
   1 25 lshift constant PLLRDY
 
-RCC_Base $04 + constant RCC_PLLCRGR
+\ RCC_Base $04 + constant RCC_PLLCRGR
    1 22 lshift constant PLLSRC
 
 \ RCC_Base $08 + constant RCC_CFGR
@@ -52,7 +52,7 @@ RCC_Base $04 + constant RCC_PLLCRGR
   0 16 lshift or  \ PLLP Division factor for main system clock
                   \ 0: /2  1: /4  2: /6  3: /8
                   \ 336 MHz / 2 = 168 MHz 
-  RCC_PLLCRGR !
+  RCC_PLLCFGR !
 
   PLLON RCC_CR bis!
     \ Wait for PLL to lock:
