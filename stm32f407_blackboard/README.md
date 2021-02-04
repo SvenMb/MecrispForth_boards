@@ -2,6 +2,8 @@
 
 This compilation adds words and definitions and makes it easier to use the hardware of that board.
 
+![STM32F407VET6 Black Board](img/stm32f407vet6_blackboard.jpg)
+
 ## console connection
 
 serial connection:
