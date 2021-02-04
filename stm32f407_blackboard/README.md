@@ -14,8 +14,8 @@ serial connection:
 
 ## install via usb with dfu-util
 
-I am recommending folie from Jean Claude Wippler as connection tool to the board. 
-He descibed this tool here: https://jeelabs.org/article/1718b/
+I am recommending folie from Jean Claude Wippler as connection tool to the board.  
+He descibed this tool here: https://jeelabs.org/article/1718b/  
 Currently it is hosted inside this archive: https://github.com/jcw/jcw.github.io/blob/main/zips/embello-2020-03-31.zip)
 
 ```bash
@@ -34,7 +34,7 @@ compiletoflash
 compiletoram
 ```
 
-## Driver for supplied FSMC-display
+## Driver for optional FSMC-display
 
 There is an nice TFT-display with touch avaiable for this board. I wrote forth words (driver) for that.
 
