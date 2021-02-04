@@ -58,10 +58,13 @@ $0000 variable tft-bg \ white foreground
 \ $BC40	 constant BROWN 	  
 \ $FC07  constant BRRED 	  
 
-: TFT-on
+\ switch backlight on
+: TFT-on ( -- )
     TFT_BL ios! 
 ;
-: TFT-off
+
+\ switch backlight on
+: TFT-off ( -- )
     omode-od TFT_BL io-mode!
     TFT_BL ioc! 
 ;
@@ -152,7 +155,7 @@ $0000 variable tft-bg \ white foreground
     FSMC_BCR bis!
 ;
 
-\ write solid rectangle 
+\ set access to rectangular window on display 
 : window ( x1 y1 x2 y2 -- deltax+1 deltay+1 )
     $2b TFT_reg h! \ y1 y2 addr
     2 pick
@@ -276,7 +279,7 @@ $0000 variable tft-bg \ white foreground
 ;
 
 \ only for compatibility
-: display
+: display ( -- )
     TFT-on \ just in case it is off
     \ do nothing
 ;
