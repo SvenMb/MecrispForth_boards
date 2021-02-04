@@ -54,7 +54,7 @@ Code:
 21 3 02 03 rtc-set-date
 ```
 
-Then import demo.fs via folie and start demo.
+Then import demo.fs via folie and start demo. (Folie: https://jeelabs.org/article/1718b/ currently hosted inside: https://github.com/jcw/jcw.github.io/blob/main/zips/embello-2020-03-31.zip)
 ```forth
 !s demo.fs
 demo
