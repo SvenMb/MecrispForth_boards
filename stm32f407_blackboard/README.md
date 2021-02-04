@@ -1,8 +1,9 @@
 # Mecrisp forth for stm32f407vet6 black board (with optional ili9341 fsmc tft display)
 
 This compilation adds words and definitions and makes it easier to use the hardware of that board.
-
-![STM32F407VET6 Black Board](img/stm32f407vet6_blackboard.jpg)
+board | back | tft
+------|------|-----
+![STM32F407VET6 Black Board](img/stm32f407vet6_blackboard.jpg) | ![STM32F407VET6 Black Board back side](img/stm32f407vet6_blackboard_back.jpg) | ![TFT Backside]img/ili9341_back.jpg)
 
 ## console connection
 
