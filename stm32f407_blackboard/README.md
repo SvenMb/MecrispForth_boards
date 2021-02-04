@@ -63,6 +63,7 @@ Code:
 ```
 
 Then import demo.fs via folie and start demo. 
+```forth
 !s demo.fs
 demo
 ```
