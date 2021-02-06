@@ -1,7 +1,7 @@
 \ ---
 \ subject: words for tft-display on STM32f407VET6 black board
 \ author: Sven Muehlberg
-\ notice: I took a lot of information from EmWin driver for that board, thanks for writing open source software!
+\ notice: 
 \ copyright: this is public domain, feel free to do whatever you want
 \ ---
 
@@ -32,31 +32,6 @@ $0000 variable tft-bg \ white foreground
     $f8 and
     8 lshift or
 ;
-
-\ color examples
-\ $0000  constant BLACK              \    0,   0,   0 
-\ $000F  constant NAVY               \    0,   0, 128 
-\ $03E0  constant DGREEN             \    0, 128,   0 
-\ $03EF  constant DCYAN              \    0, 128, 128 
-\ $7800  constant MAROON             \  128,   0,   0 
-\ $780F  constant PURPLE             \  128,   0, 128 
-\ $7BE0  constant OLIVE              \  128, 128,   0 
-\ $C618  constant LGRAY              \  192, 192, 192 
-\ $7BEF  constant DGRAY              \  128, 128, 128 
-\ $001F  constant BLUE               \    0,   0, 255 
-\ $051D	 constant BLUE2		  
-\ $07E0  constant GREEN              \    0, 255,   0 
-\ $B723	 constant GREEN2	  
-\ $8000	 constant GREEN3	  
-\ $07FF  constant CYAN               \    0, 255, 255 
-\ $F800  constant RED                \  255,   0,   0 
-\ $F81F  constant MAGENTA            \  255,   0, 255 
-\ $FFE0  constant YELLOW             \  255, 255,   0 
-\ $FFFF  constant WHITE              \  255, 255, 255 
-\ $FD20  constant ORANGE             \  255, 165,   0 
-\ $AFE5  constant GREENYELLOW        \  173, 255,  47 
-\ $BC40	 constant BROWN 	  
-\ $FC07  constant BRRED 	  
 
 \ switch backlight on
 : TFT-on ( -- )
@@ -107,7 +82,6 @@ $0000 variable tft-bg \ white foreground
     PE15 io-mode! \ D12
 
     \ set pins to fsmc
-    \ GPIOD->AFR[0] = (GPIOD->AFR[0] & (0b1111<<(4*2) | 0b1111<<(4*3) | 0b1111<<(4*6))) | 0b1100<<(4*0) | 0b1100<<(4*1) | 0b1100<<(4*4) | 0b1100<<(4*5) | 0b1100<<(4*7);
     %1111 8 lshift
     %1111 12 lshift or
     %1111 24 lshift or
@@ -119,7 +93,6 @@ $0000 variable tft-bg \ white foreground
     %1100 28 lshift or
     GPIOD GPIO.AFRL + bis!
 
-    \ GPIOD->AFR[1] = (GPIOD->AFR[1] & (0b1111<<(4*(11-8)) | 0b1111<<(4*(12-8)))) | 0b1100<<(4*(8-8)) | 0b1100<<(4*(9-8)) | 0b1100<<(4*(10-8)) | 0b1100<<(4*(11-8)) | 0b1100<<(4*(14-8)) | 0b1100<<(4*(15-8));
     %1111 12 lshift
     %1111 16 lshift or
     not GPIOD GPIO.AFRH + bic!
@@ -131,24 +104,22 @@ $0000 variable tft-bg \ white foreground
     %1100 28 lshift or
     GPIOD GPIO.AFRH + bis!
     
-\ GPIOE->AFR[0] = (GPIOE->AFR[0] & ~(0b1111<<(4*7))) | 0b1100<<(4*7);
     %1111 28 lshift
     GPIOE GPIO.AFRL + bic!
     %1100 28 lshift
     GPIOE GPIO.AFRL + bis!
     
-    \ GPIOE->AFR[1] = 0xCCCCCCCC;
     $CCCCCCCC
     GPIOE GPIO.AFRH + !
     
-    \ FSMC_Bank1->BTCR[1] = FSMC_BTR1_ADDSET_1 | FSMC_BTR1_DATAST_1;
+    \ FSMC_Bank1->BTR0 = FSMC_BTR1_ADDSET_1 | FSMC_BTR1_DATAST_1;
     \ %0110             \ slow
     \ %0110 8 lshift or
     %0001               \ fast
     %0001 8 lshift or
     FSMC_BTR bis!
     
-    \ FSMC_Bank1->BTCR[0] = FSMC_BCR1_MWID_0 | FSMC_BCR1_WREN | FSMC_BCR1_MBKEN;
+    \ FSMC_Bank1->BCR0 = FSMC_BCR1_MWID_0 | FSMC_BCR1_WREN | FSMC_BCR1_MBKEN;
     %01 4 lshift
     %1 12 lshift or
     %1 or
