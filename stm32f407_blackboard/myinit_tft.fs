@@ -15,9 +15,13 @@ include ../lib/graphic/graphics.fs
 \ fonts incl. TFT specific words
 include lib/font8x6.fs
 
+\ touch
+include lib/touch.fs
+
 : init
     init
     TFT-init
+    touch-init
 ;
 
 ( board_tft end: ) here dup hex.
