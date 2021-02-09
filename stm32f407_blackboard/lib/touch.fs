@@ -53,7 +53,7 @@ SPI2 $0C + constant SPI2-DR
     SPI2-DR h@       \ fetch data
 ;
 
-: isTouch ( -- b )
+: Touch? ( -- b )
     PC5 io@ not
 ;
 
@@ -69,20 +69,102 @@ SPI2 $0C + constant SPI2-DR
 ;
 
 : TPxy ( -- x y / 0 )
-    isTouch
-    if
+\    Touch?
+\    if
         $90 TPread \ X
+        $FFF swap -
+        4 lshift
         3 ms 
         $D0 TPread \ Y
+        $FFF swap -
+        4 lshift
         3 ms
-        CR hex. hex.
-    then
+\   then
 ;
+
+: s_cross s" touch cross" ;
+: s_release s" release" ;
+
+: wait_touch
+    begin
+        Touch?
+        key? or        
+    until
+    tpxy
+;
+
+160 variable ax
+6500 variable bx
+200 variable ay
+50 variable by
+
+: trxy ( rx ry -- tx ty  )
+    by @ - ay @ /
+    swap
+    bx @ - ax @ /
+    swap
+;
+
 
 : calibTouch ( -- )
+    clear
+    tft-on
+
+    0 0 40 40 line
+    40 0 0 40 line
+    20 20 15 circle
+    s_cross 120 116 drawstring
+    wait_touch
+    clear
+    s_release 120 116 drawstring
+    begin Touch? not key? or until
+    500 ms
     
-    
+    319 0 over 40 - 40 line
+    279 0 over 40 + 40 line
+    299 20 15 circle
+    s_cross 120 116 drawstring
+    wait_touch
+    clear
+    s_release 120 116 drawstring
+    begin Touch? not key? or until
+    500 ms
+
+    drop \ I don't use that y-value
+    rot dup -rot
+    - 319 / dup ax !
+    ." ax:" dup .
+    20 * - bx !
+    ." bx:" dup .
+
+    0 239 40 over 40 - line
+    0 199 40 over 40 + line
+    20 219 15 circle
+    s_cross 120 116 drawstring
+    wait_touch
+    clear
+    s_release 120 116 drawstring
+    begin Touch? not key? or until
+    500 ms
+
+    swap drop over
+    - 239 / dup ay !
+    ." ay:" dup .
+    20 * - by !
+    ." by:" dup .
+
+    \ 319 239 over 40 - over 40 - line
+    \ 279 239 over 40 + over 40 - line
+    \ 299 219 15 circle
+    \ s_cross 120 116 drawstring
+    \ wait_touch
+    \ clear
+    \ s_release 120 116 drawstring
+    \ begin Touch? not key? or until
+    \ 500 ms
+
+    clear
 ;
 
 
-: testTouch begin TPxy key? until ;
+: testTouch begin wait_touch trxy 2dup putpixel CR hex. hex. key? until ;
