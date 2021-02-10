@@ -1,5 +1,5 @@
 \ ---
-\ subject: driver/words for xpr2046 touch on stm32f407vet6 black board 
+\ subject: driver/words for xpt2046 touch on stm32f407vet6 black board 
 \ author: Sven Muehlberg
 \ notice: 
 \ copyright: this is public domain, feel free to do whatever you want
@@ -35,7 +35,7 @@ SPI2 $0C + constant SPI2-DR
     5 15 GPIOB set-alternate      \ PB15 -> Alternate function: %0101: AF5 (SPI2) 
     1 14 lshift RCC_APB1ENR bis!  \ setSPI2EN
     $04 SPI2 bis!   \ MSTR in SPI_CR1
-    $28 SPI2 bis!   \ spi speed 1/256 BR0:2  in SPI_CR1
+    $28 SPI2 bis!   \ spi speed 1/64 BR0:2  in SPI_CR1
     8 bit SPI2 bis! \ SSI  in SPI_CR1
     9 bit SPI2 bis! \ SSM  in SPI_CR1
     6 bit SPI2 bis! \ SPE - enable  in SPI_CR1
