@@ -52,6 +52,11 @@ There is an nice TFT-display with touch avaiable for this board. I wrote forth w
 
 (touch sensor is currently not implemented)
 
+## Driver for touch on that FSMC-display
+
+** hardware driver **
+- lib/touch.c 
+
 ## Demo for fsmc TFT-display and onboard RTC
 
 Please set time and date according to documentation in rtc.fs.
@@ -70,4 +75,16 @@ demo
 
 You should get the following output:
 ![demo.fs output](img/demo.jpg)
+
+## Demo for TFT-display with touch
+
+Then import demo.fs via folie and start demo. 
+```forth
+!s tpaint.fs
+tPaint
+```
+You should get the following output:
+![tpaint.fs output](img/tpaint.jpg)
+
+
 
