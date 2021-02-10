@@ -36,7 +36,9 @@ include lib/f407-168MHz-uart1.fs
 include ../lib/stm32/systick.fs
 include ../lib/stm32/f4/cornerstone.fs
 
-: calign ; \ not needed with stm32f4(?)
+: calign 
+    align
+; \ just aliased for some scripts
 
 : hello ( -- ) flash-kb . ." KB STM32F407 #" hwid hex.
   flash-kb $400 * compiletoflash here -  flashvar-here compiletoram here - 
