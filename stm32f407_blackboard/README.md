@@ -50,8 +50,6 @@ There is an nice TFT-display with touch avaiable for this board. I wrote forth w
  - lib/font8x6.fs 
 (font and words are derived from jcw-flib:/mecrisp/graphics.txt, adaptation/optimisation to this tft done by me)
 
-(touch sensor is currently not implemented)
-
 ## Driver for touch on that FSMC-display
 
 ** hardware driver **
