@@ -2,6 +2,8 @@
 \ for stm32f4 with 24mhz pclk1
 \ Output is on MOSI2 (PB15)
 \ 
+\ this is based on https://github.com/tht/forth-stuff/blob/master/ws2812b/ws2812b.fs 
+\ which was written for stm32f103
 
 
 \ --------------------------------------------------
