@@ -35,13 +35,13 @@
 .word irq_vektor_exti2+1 @ Position  8: EXTI Line 2
 .word irq_vektor_exti3+1 @ Position  9: EXTI Line 3
 .word irq_vektor_exti4+1 @ Position 10: EXTI Line 4
-.word nullhandler+1 @ Position 11: DMA1 Stream 0
-.word nullhandler+1 @ Position 12: DMA1 Stream 1
-.word nullhandler+1 @ Position 13: DMA1 Stream 2
-.word nullhandler+1 @ Position 14: DMA1 Stream 3
-.word nullhandler+1 @ Position 15: DMA1 Stream 4
-.word nullhandler+1 @ Position 16: DMA1 Stream 5
-.word nullhandler+1 @ Position 17: DMA1 Stream 6
+.word irq_vektor_dma1_s0+1 @ Position 11: DMA1 Stream 0
+.word irq_vektor_dma1_s1+1 @ Position 12: DMA1 Stream 1
+.word irq_vektor_dma1_s2+1 @ Position 13: DMA1 Stream 2
+.word irq_vektor_dma1_s3+1 @ Position 14: DMA1 Stream 3
+.word irq_vektor_dma1_s4+1 @ Position 15: DMA1 Stream 4
+.word irq_vektor_dma1_s5+1 @ Position 16: DMA1 Stream 5
+.word irq_vektor_dma1_s6+1 @ Position 17: DMA1 Stream 6
 .word irq_vektor_adc+1 @ Position 18: ADC global interrupts
 .word nullhandler+1 @ Position 19:
 .word nullhandler+1 @ Position 20:

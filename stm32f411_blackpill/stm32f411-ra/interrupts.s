@@ -30,6 +30,13 @@ interrupt exti1
 interrupt exti2
 interrupt exti3
 interrupt exti4
+interrupt dma1_s0
+interrupt dma1_s1
+interrupt dma1_s2
+interrupt dma1_s3
+interrupt dma1_s4
+interrupt dma1_s5
+interrupt dma1_s6
 interrupt adc
 interrupt exti5
 interrupt tim1brk
