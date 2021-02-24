@@ -1,6 +1,7 @@
 \ Example using simple interupt driven buttons or touch sensors
 \ not debounced...
 \ needs io.fs from jcw
+\ need nvic.fs
 \ made for STM32F4
 
 \ irq5-exti5 is not defined in standard mecrisp kernel
