@@ -36,7 +36,7 @@
 \ irq status, also for irq reset
 \ EXTI $14 + constant EXTI_PR
 
-\ documented in RM0383 for STM32F10xxx
+\ documented in RM0383 for STM32F411
 \ table 37 Vector table
 \ from position 32 it starts with NVIC_ISER1
 \ $E000E100 constant NVIC_ISER0 
@@ -79,7 +79,7 @@
     1 bit EXTI_PR bis! \ clear exti0
 ;
 
-\ setup code for only PA2
+\ setup code for only PA1
 : irsetup
     imode-float PA1 io-mode! \ for IR TSOP1838 sensor
     ['] ir_isr irq-exti1 ! \ set isr for exti2
