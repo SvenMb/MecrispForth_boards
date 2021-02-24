@@ -28,7 +28,6 @@
 
 
 : demo ( -- )
-    tft-init
     tft-init tft-on
 
     48 48 48 rgb2tft tft-bg !
