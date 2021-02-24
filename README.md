@@ -13,3 +13,10 @@ Source:
 
  - working DMA based driver
  - currently tested with stm32f411 board
+
+### Example TSOP1838 driver for stm32f4
+
+Source:
+/lib/ext/TSOP1838/TSOP1838_f4.fs
+
+- works via interrupt
