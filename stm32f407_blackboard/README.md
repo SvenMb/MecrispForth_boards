@@ -74,9 +74,9 @@ demo
 You should get the following output:
 ![demo.fs output](img/demo.jpg)
 
-## Demo for TFT-display with touch
+## Demo tPaint for TFT-display with touch
 
-Then import demo.fs via folie and start demo. 
+Then import tpaint.fs via folie and start demo. 
 ```forth
 !s tpaint.fs
 tPaint
