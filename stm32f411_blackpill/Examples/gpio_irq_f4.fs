@@ -4,7 +4,7 @@
 \ needs nvic.fs
 \ made for STM32F4
 
-\ irq5-exti5 is not defined in standard mecrisp kernel
+\ irq-exti5 is not defined in standard mecrisp kernel
 \ use mine in stm32f411-ra subfolder, or assemble it yourself with that irq
 
 \ data from RM0383 for STM32F1411
