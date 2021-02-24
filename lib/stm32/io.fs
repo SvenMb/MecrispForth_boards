@@ -53,6 +53,7 @@
 %0001011 constant OMODE-AF-PP-HS  \ alternate function, push-pull, high speed
 %1001010 constant OMODE-AF-OD  \ alternate function, open drain
 %1011010 constant OMODE-AF-OD-HIGH  \ alternate function, open drain, pull up
+%1011011 constant OMODE-AF-OD-HS-HIGH  \ alternate function, open drain, pull up
 %0000110 constant OMODE-PP     \ output, push-pull
 %1000110 constant OMODE-OD     \ output, open drain
 %1010110 constant OMODE-OD-HIGH  \ output, open drain, pull up
