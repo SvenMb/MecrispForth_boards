@@ -3,6 +3,8 @@ subject: Installation of basic mecrisp forth system on stm32f411
 author: Sven Mühlberg
 ---
 
+** documentation needs rewrite **
+
 # STM32F411 mecrisp Forth Basic Installation
 
 * serial port is RX - PA3, TX - PA2
