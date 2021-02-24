@@ -10,7 +10,10 @@
 \ data from RM0383 for STM32F1411
 \ but should work on any STM32F4
 
-\ all constants already defined in stm32f4.fs 
+\ all constants already defined in stm32f4.fs
+\ $40023800 constant RCC
+\ RCC $44 + constant RCC_APB2ENR
+
 \ $40013800 constant SYSCFG
 
 \ 4 bit defining the port PA -> %0000 PB-> %0001 ...
@@ -83,22 +86,22 @@
 : setup_PB5_PB8
 \    imode-float PB5 io-mode!
 \    imode-float PB8 io-mode!
-    imode-low PA5 io-mode! \ just to have PA pins clean
-    imode-low PA8 io-mode!
-    imode-low PB5 io-mode! \ these are the one which should work, but
+    imode-low PB5 io-mode!
     imode-low PB8 io-mode!
     
     ['] gpio_isr irq-exti5 ! \ set isr for exti5-9 (!)
 
-    \ why is this ignored???
-    $00E0 SYSCFG_EXTICR2 bic! $0010 SYSCFG_EXTICR2 bis!   \ PB5 for exti5
-    $000E SYSCFG_EXTICR3 bic! $0001 SYSCFG_EXTICR3 bis!   \ PB8 for exti8
-    \ after that syscfg_exticrX is still empty, why???
+    \ enable syscfg
+    14 bit RCC_APB2ENR bis! \ set SYSCFGEN
+    \ PB5 for exti5
+    $00E0 SYSCFG_EXTICR2 bic! $0010 SYSCFG_EXTICR2 bis!
+    \ PB8 for exti8
+    $000E SYSCFG_EXTICR3 bic! $0001 SYSCFG_EXTICR3 bis!
     
     5 bit 8 bit or EXTI_RTSR bis! \ rising edge for exti5 and exti8
     5 bit 8 bit or EXTI_IMR bis!  \ enable exti5 and exti8
 
     \ EXTI5_irq bit nvic_iser0 bis! \ enable exti5-9(!) in nvic
-    \ EXTI5_irq nvic-enable
+    EXTI5_irq nvic-enable
     CR ." Ready!"
 ;
