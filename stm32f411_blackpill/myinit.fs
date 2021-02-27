@@ -22,14 +22,24 @@ include ../lib/stm32/io.fs
 
 include ../lib/stm32/pkgs/pins48.fs
 
+\ define onboard leds
+PC13 constant LED0 \ low active
+
+\ define onboard switches
+PA0 constant KEY_WKUP \ to GND
+
 include ../lib/stm32/f4/ids.fs
 include lib/96MHz.fs
 include ../lib/stm32/systick.fs
 include ../lib/stm32/f4/cornerstone.fs
 
+\ align to halfword 
 : calign 
-    align
-; \ just aliased for some scripts
+    here 1 and 
+    if
+        0 c,
+    then
+; 
 
 : hello ( -- ) flash-kb . ." KB STM32F411 #" hwid hex.
   flash-kb $400 * compiletoflash here -  flashvar-here compiletoram here - 
@@ -50,9 +60,10 @@ cornerstone eraseflash
 \ add words for onboard clock
 include ../lib/stm32/f4/rtc/rtc.fs
 include ../lib/stm32/f4/rtc/rtc_ui.fs
-\ include i2c-bb.fs
-\ include sh1106.fs
-\ include graphics.fs \ small font
+\ graphics need cleanup, but hardware is working
+\ include ../lib/stm32/i2c-bb.fs
+\ include ../lib/ext/OLed/sh1106.fs
+\ include ../lib/graphics/graphics.fs \ small font
 
 ( board end: ) here dup hex.
 ( board size: ) swap - hex.
