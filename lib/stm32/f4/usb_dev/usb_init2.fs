@@ -42,7 +42,7 @@ OTG_BASE $B10 + constant OTG_DOEPTSIZ0
     10 PA12 alt-mode!
 
     PA11 OMODE-AF-PP OMODE-SLOW + io-mode!
-    PA12 OMODE-AF-PP OMODE-SLOW + io-mode!
+    PA12 OMODE-AF-PP OMODE-SLOW + io-mode! \ it hangs here !!! don't know why
 
     1 21 lshift 1 16 lshift or OTG_GCCFG bis! \ set novbussens, pwrdwn deactivate
     1 30 lshift OTG_GUSBCFG bis!         \ set fdmod
