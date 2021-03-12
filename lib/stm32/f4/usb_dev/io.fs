@@ -80,17 +80,30 @@ $40020000 constant GPIOA
   dup io-mask swap io-base GPIO.OTYPER +
   ( mode mask addr ) rot %1000000 and bit! ;
 
-\ : io. ( pin -- )  \ display readable GPIO registers associated with a pin
-\  cr
-\   ." PIN " dup io#  dup .  10 < if space then
-\  ." PORT " dup io-port [char] A + emit
-\  io-base
-\    ."   MODER " dup @ hex. 4 +
-\  ."    OTYPER " dup @ h.4  4 +
-\  ."   OSPEEDR " dup @ hex. 4 +
-\      ."  PUPD " dup @ hex. 4 +
-\  cr 14 spaces
-\       ."  IDR " dup @ h.4  4 +
-\       ."  ODR " dup @ h.4  12 +
-\    ."    AFRL " dup @ hex. 4 +
-\       ." AFRH " dup @ hex. drop ;
+: alt-mode! ( alt-mode pin -- ) \ set alternative mode for a pin
+    dup io-base >R \ get base-adr for port and mv to return stack
+    $FF and        \ get pin on port
+    dup 8 < if     \ if 0-7 pin, use AFRL
+        4 * lshift GPIO.AFRL
+    else
+        8 - 4 * lshift GPIO.AFRH
+    then
+    R> + \ get  base-adr back and add to AFRL/H
+    bis! \ put altmode into register
+;  
+
+
+: io. ( pin -- )  \ display readable GPIO registers associated with a pin
+    cr
+    ." PIN " dup io#  dup .  10 < if space then
+    ." PORT " dup io-port [char] A + emit
+    io-base
+    ."   MODER " dup @ hex. 4 +
+    ."    OTYPER " dup @ hex.  4 +
+    ."   OSPEEDR " dup @ hex. 4 +
+    ."  PUPD " dup @ hex. 4 +
+    cr 14 spaces
+    ."  IDR " dup @ hex.  4 +
+    ."  ODR " dup @ hex.  12 +
+    ."    AFRL " dup @ hex. 4 +
+    ." AFRH " dup @ hex. drop ;

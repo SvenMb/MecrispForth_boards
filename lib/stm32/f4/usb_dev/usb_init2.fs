@@ -35,9 +35,11 @@ OTG_BASE $B10 + constant OTG_DOEPTSIZ0
     PA12 OMODE-OD OMODE-SLOW + io-mode!
     3 ms
 
-    10 12 lshift \ pin 11, AF mode  10 (USB)
-    10 16 lshift or
-    GPIOA GPIO.AFRH + bis! \ set AF for GPIOA
+    \ 10 12 lshift \ pin 11, AF mode  10 (USB)
+    \ 10 16 lshift or
+    \ GPIOA GPIO.AFRH + bis! \ set AF for GPIOA
+    10 PA11 alt-mode!
+    10 PA12 alt-mode!
 
     PA11 OMODE-AF-PP OMODE-SLOW + io-mode!
     PA12 OMODE-AF-PP OMODE-SLOW + io-mode!
