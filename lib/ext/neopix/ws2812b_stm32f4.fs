@@ -117,11 +117,19 @@ MAX-LEDS led2bytes buffer: strip
     r> 6 + triplett2byte or
 ;
 
-: led-clear ( - )
+
+: led-all ( rgb -- )
   MAX-LEDS 0 do
-    $00 $00 $00 i setpixel
+    dup i setpix
   loop
+  drop
 ;
+
+: led-clear ( -- )
+    $0 led-all
+;
+
+
 
 : led-show ( )
     0 bit DMA1-S4CR bic!             \ F4 Make sure channel is disabled
@@ -226,8 +234,85 @@ MAX-LEDS led2bytes buffer: strip
   loop led-show
 ;
 
-: ringanimate ( - )
-  100 0 do
-    i demodata drop 200 ms
-  loop
+\ : ringanimate ( - )
+\  100 0 do
+\    i demodata drop 200 ms
+\  loop
+\ ;
+: ringanimate ( -- )
+    0
+    begin
+        demodata 100 ms
+        1+ 64 mod \ 64 needs to be adjusted if other colorwheel is used
+        key?
+    until
+    drop
+    led-clear led-show
 ;
+
+
+\ pseudo random generator
+
+$7a92764b variable seed
+
+: prand ( -- u )
+    seed @
+    dup 13 lshift xor
+    dup 17 rshift xor
+    dup 5  lshift xor
+    dup seed !
+    57947 *
+;
+
+: prandrange ( u0 -- u1 ) \ random u1 will be smaller then u1
+    prand um* nip
+;
+
+\ fire demo
+\ : fire ( -- )
+\   begin
+\        MAX-LEDS 0 do
+\            60 prandrange 
+\                255 over - i 8 * - 0 max 255 min \ set 0 when <0, set 255 if > 255 
+\            swap 96 over - i 3 * - 0 max
+\            12 rot - i 12 32 */ - 0 max
+\            i setpixel
+\        loop
+\        led-show
+\        100 50 prandrange - ms
+\        key?
+\    until
+\    led-clear led-show
+\ ;
+
+\ new fire with adjustable colors
+
+: fire ( rgb -- rgb )
+        MAX-LEDS 0 do
+            60 prandrange >r
+            dup $FF0000 and 16 rshift dup r@ - swap i 32 */ - 0 max 255 min
+            over $00FF00 and 8 rshift dup r@ - swap i 32 */ - 0 max 255 min
+            2 pick $0000FF and        dup r> - swap i 32 */ - 0 max 255 min
+            i setpixel
+        loop
+;
+
+    
+: burn ( rgb -- )
+    begin
+        fire
+        led-show
+        150 50 prandrange - ms
+        key?
+    until
+    led-clear led-show
+    drop \ delete rgb from stack
+;
+
+\ red fire example
+\ $FF6010 burn
+\ green fire example
+\ $60FF10 burn
+
+
+        
