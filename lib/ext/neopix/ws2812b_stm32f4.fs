@@ -45,11 +45,28 @@ PB15 constant MOSI2
 
 \ Write one color-byte in WS2812B format to 3 bytes in memory
 : writetriplett ( color base_addr index - )
-  3 * + >r \ calculate addr base and store on return stack
+  3 * + >r                       \ calculate addr base and store on return stack
   byte2triplett 
            dup $ff and r@ 2 + c! \ output last byte
   8 rshift dup $ff and r@ 1+  c! \ output second byte
   8 rshift     $ff and r>     c! \ output first byte and clear return stack
+;
+
+\ recalculates colors from stripdata
+: triplett2byte ( triplettaddr - colorbyte )
+    \ only checks second bit in triplett
+    0                \ will be the colorbyte after or-ing the bits in loop  
+    8 0 do
+        over                  \ adress of bytetripletts
+        i 3 * 1+              \ calc bit
+        8 /mod
+        2 swap - rot +        \ calc byte
+        swap bit swap cbit@   \ check bit
+        if
+            i bit or
+        then
+    loop
+    swap drop
 ;
 
 
@@ -65,14 +82,23 @@ MAX-LEDS led2bytes buffer: strip
 \ --------------------------------------------------
 
 \ Sets color of an LED (r, g, b are 0-255 / index is 0-based)
-: setpixel ( r g b index - )
+: setpixel ( r g b index -- )
   1+ 9 * strip + >r
   r@ 2 writetriplett
   r@ 0 writetriplett
   r> 1 writetriplett
 ;
 
-\ sets color of an led, color is packed 16bit
+\ gets color of an led, color is r, g, b 
+: getpixel ( index - r g b )
+    1+ 9 * strip + >r
+    r@ 3 + triplett2byte
+    r@     triplett2byte
+    r> 6 + triplett2byte
+;
+
+
+\ sets color of an led, color is packed rgb 24bit
 : setpix ( rgb index - )
     1+ 9 * strip + >r
     dup $0000ff and
@@ -83,8 +109,12 @@ MAX-LEDS led2bytes buffer: strip
     r> 1 writetriplett
 ;
 
-\ gets color of an led, color is packed 16 bit
-: getpix ( index -- rgb )
+\ gets color of an led, color is packed 24 bit
+: getpix ( index - rgb )
+    1+ 9 * strip + >r
+    r@ 3 + triplett2byte 16 lshift
+    r@     triplett2byte 8 lshift or
+    r> 6 + triplett2byte or
 ;
 
 : led-clear ( - )
@@ -100,19 +130,10 @@ MAX-LEDS led2bytes buffer: strip
     0 bit DMA1-S4CR bis!   \ Make sure channel is enabled
 ;
 
-\ Port alternate function
-\ : set-alternate ( af# pin# baseAddr -- )
-\    >R dup 8 < if 
-\        4 * lshift R> $20 + 
-\    else 
-\        8 - 4 * lshift R> $24 + 
-\    then
-\    bis!
-\ ;
-
 : led-init ( - )
     21 bit RCC_AHB1ENR bis!          \ F4 DMA1EN clock enable
 
+    strip MAX-LEDS led2bytes $00 fill
     led-clear                        \ clear buffer
 
     0 DMA1-S4CR !                     \ F4 Make sure channel is disabled
@@ -148,8 +169,6 @@ MAX-LEDS led2bytes buffer: strip
 
     SPI2-SR @ drop         \ appears to be needed to avoid hang in some cases
     1 bit SPI2-CR2 bis!    \ enable DMA Tx
-    
-    strip MAX-LEDS led2bytes $00 fill
 
     led-show
 ;
@@ -160,27 +179,50 @@ MAX-LEDS led2bytes buffer: strip
 \ --------------------------------------------------
 
 \ Output memory buffer in internal format
-: led. ( - )
-  MAX-LEDS 1+ 1 do
-    CR i h.2 ." :"
-    9 0 do ."  " strip j 9 * + i + c@ h.2 loop
-  loop
+\ : led. ( - )
+\  MAX-LEDS 1+ 1 do
+\    CR i h.2 ." :"
+\    9 0 do ."  " strip j 9 * + i + c@ h.2 loop
+\  loop
+\ ;
+
+\ Output leds in packed rgb format
+: led. ( -- )
+    MAX-LEDS 0 do
+        CR i h.2 ." : "
+        i getpix hex.
+    loop
 ;
 
+
 \ returns one of the colors for use in an animation
-: colorwheel ( i - u u u )
-  5 mod case
-    0 of $ff $ff $ff endof
-    1 of $ff $00 $00 endof
-    2 of $00 $ff $00 endof
-    3 of $00 $00 $ff endof
-    4 of $00 $00 $00 endof
-  endcase ;
+\ : colorwheel ( i - u u u )
+\  5 mod case
+\    0 of $ff $ff $ff endof
+\    1 of $ff $00 $00 endof
+\    2 of $00 $ff $00 endof
+\    3 of $00 $00 $ff endof
+\    4 of $00 $00 $00 endof
+\  endcase ;
+
+: colorwheel2 ( i - u u u )
+    8 mod case
+        0 of $ff $ff $ff endof
+        1 of $ff $00 $00 endof
+        2 of $ff $ff $00 endof
+        3 of $00 $ff $00 endof
+        4 of $00 $ff $ff endof
+        5 of $00 $00 $ff endof
+        6 of $ff $00 $ff endof
+        7 of $00 $00 $00 endof
+    endcase
+;
+
 
 \ output some demo data ( input is offset for animation)
 : demodata ( i )
   MAX-LEDS 0 do
-    dup i + colorwheel i setpixel
+    dup i + colorwheel2 i setpixel
   loop led-show
 ;
 
