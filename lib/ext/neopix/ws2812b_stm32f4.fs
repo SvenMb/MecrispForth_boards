@@ -58,7 +58,6 @@ PB15 constant MOSI2
 
 \ in-memory buffer -> 9 bytes for every LED
 MAX-LEDS led2bytes buffer: strip
-strip MAX-LEDS led2bytes $00 fill
 
 
 \ --------------------------------------------------
@@ -73,7 +72,7 @@ strip MAX-LEDS led2bytes $00 fill
   r> 1 writetriplett
 ;
 
-\ sets color of an led
+\ sets color of an led, color is packed 16bit
 : setpix ( rgb index - )
     1+ 9 * strip + >r
     dup $0000ff and
@@ -82,6 +81,10 @@ strip MAX-LEDS led2bytes $00 fill
     r@ 0 writetriplett
     $ff0000 and 16 rshift
     r> 1 writetriplett
+;
+
+\ gets color of an led, color is packed 16 bit
+: getpix ( index -- rgb )
 ;
 
 : led-clear ( - )
@@ -146,6 +149,8 @@ strip MAX-LEDS led2bytes $00 fill
     SPI2-SR @ drop         \ appears to be needed to avoid hang in some cases
     1 bit SPI2-CR2 bis!    \ enable DMA Tx
     
+    strip MAX-LEDS led2bytes $00 fill
+
     led-show
 ;
 
