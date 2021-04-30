@@ -1,6 +1,7 @@
 \ I/O pin primitives
 
 \ $40020000 constant GPIO-BASE
+$40020000 constant GPIOA
       $00 constant GPIO.MODER   \ Reset 0 Port Mode Register
                                 \   00=Input  01=Output  10=Alternate  11=Analog
       $04 constant GPIO.OTYPER  \ Reset 0 Port Output type register
@@ -79,7 +80,7 @@
   dup io-mask swap io-base GPIO.OTYPER +
   ( mode mask addr ) rot %1000000 and bit! ;
 
-: io. ( pin -- )  \ display readable GPIO registers associated with a pin
+ : io. ( pin -- )  \ display readable GPIO registers associated with a pin
   cr
    ." PIN " dup io#  dup .  10 < if space then
   ." PORT " dup io-port [char] A + emit
