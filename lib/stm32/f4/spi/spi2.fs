@@ -20,19 +20,22 @@
 : -spi2 ( -- ) ssel2 @ ios! ;  \ deselect SPI
 
 : >spi2> ( c -- c )  \ hardware SPI, 8 bits
-  SPI2-DR !  begin SPI2-SR @ 1 and until  SPI2-DR @ ;
+  SPI2-DR c!  begin SPI2-SR @ 1 and until  SPI2-DR c@ ;
 
 \ single byte transfers
 : spi2> ( -- c ) 0 >spi2> ;  \ read byte from SPI
 : >spi2 ( c -- ) >spi2> drop ;  \ write byte to SPI
 
 : spi2-init ( -- )  \ set up hardware SPI
+  1 bit 2 bit or rcc_ahb1enr bis! \ probably alread on from mecrisp
   OMODE-PP ssel2 @ io-mode! -spi2
   OMODE-AF-PP SCLK2 io-mode!
   IMODE-FLOAT MISO2 io-mode!
   OMODE-AF-PP MOSI2 io-mode!
   14 bit RCC_APB1ENR bis!  \ set SPI2EN
-  %0000000001001100 SPI2-CR1 !  \ clk/4, i.e. 9 MHz, master
+  6 bit SPI2-CR1 bic!
+  %0000001100111100 SPI2-CR1 !  \ clk/4, i.e. 9 MHz, master
+  6 bit SPI2-CR1 bis!
   SPI2-SR @ drop  \ appears to be needed to avoid hang in some cases
   2 bit SPI2-CR2 bis!  \ SS output enable
 ;

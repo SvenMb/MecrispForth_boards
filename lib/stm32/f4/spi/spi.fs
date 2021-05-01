@@ -5,7 +5,7 @@
 [ifndef] MISO  PA6 constant MISO  [then]
 [ifndef] MOSI  PA7 constant MOSI  [then]
 
-$40013000 constant SPI1
+\ $40013000 constant SPI1
      SPI1 $0 + constant SPI1-CR1
      SPI1 $4 + constant SPI1-CR2
      SPI1 $8 + constant SPI1-SR
@@ -31,7 +31,7 @@ $40013000 constant SPI1
   OMODE-AF-PP SCLK io-mode!
   IMODE-FLOAT MISO io-mode!
   OMODE-AF-PP MOSI io-mode!
-  12 bit RCC-APB2ENR bis!  \ set SPI1EN
+  12 bit RCC_APB2ENR bis!  \ set SPI1EN
   %0000000001010100 SPI1-CR1 !  \ clk/8, i.e. 9 MHz, master
   SPI1-SR @ drop  \ appears to be needed to avoid hang in some cases
   2 bit SPI1-CR2 bis!  \ SS output enable
