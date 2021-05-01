@@ -8,7 +8,7 @@ include nvic.fs
 
 include systick.fs
 
-\ 1000 systick-hz
+1000 systick-hz
 
 include io.fs
 
