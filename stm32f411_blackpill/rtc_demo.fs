@@ -1,4 +1,10 @@
- : rtcisr
+$ffffff variable tcolor
+$0 variable temp
+$0 variable humi
+$1 variable leddemo
+$0 variable readdht11
+
+: rtcisr
     $0400 rtc_isr bit@ not if \ check if new second
 	exit
     then
@@ -7,11 +13,42 @@
     then
 	
     [ifdef] drawstring
-      clear rtc-get-time ftime 0 4 drawstring rtc-get-date fdate 0 24 drawstring
-      [ifdef] adc-temp
-        adc-temp ftemp 0 44 drawstring 
+        clear
+        s" Time:" 0 4  drawstring rtc-get-time ftime 36 4  drawstring
+        s" Date:" 0 20 drawstring rtc-get-date fdate 36 20 drawstring
+        \ my dht11@ word doesn't work when started from here
+        \ probably systick isn't working from here
+      [ifdef] DHT11@
+          rtc-get-time 10 mod 0= if \ every 10 sec
+              1 readdht11 c!
+          then
+          drop drop \ delete hours and minutes from stack
+          s" Temp:"  0 36 drawstring
+          temp @ 500 min
+          s>d swap over dabs <# # $2E hold #S rot sign #>
+          36 36 drawstring
+          s" Humi:" 64 36 drawstring
+          humi @ 1000 min
+          0 <# # $2E hold #S #>
+          100 36 drawstring
       [then]
-      display
+      [ifdef] adc-temp
+        s" cpu:" 0 52 drawstring  adc-temp     ftemp 36 52 drawstring 
+      [then]
+      display 
+      [ifdef] sec-cnt
+          leddemo @ 1 = if
+              rtc-get-time tcolor @ swap sec-cnt
+              drop drop
+          then
+      [then]
+      [ifdef] fire
+          leddemo @ 2 = if
+              tcolor @
+              fire
+              drop
+          then
+      [then]
     [else]
       CR time. $20 emit date.
       [ifdef] adc-temp
@@ -29,6 +66,9 @@
     [ifdef] adc-init
       adc-init
       CR ." ADC initialized"
+    [then]
+    [ifdef] led-init
+        led-init
     [then]
     rtc-init
     CR ." RTC initialised"
