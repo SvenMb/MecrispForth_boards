@@ -73,9 +73,10 @@ RCC_Base $08 + constant RCC_CFGR
     168000000 clock-hz !
 
     \ UART1 on fast APB2
-    APB2-hz @ uart1-baud @ / \ calculate divider
-    USART1_BRR ! \ Set Baud rate divider
+\    APB2-hz @ uart1-baud @ / \ calculate divider
+\    USART1_BRR ! \ Set Baud rate divider
     \ UART2 on slow APB1
 \    APB1-hz @ uart2-baud @ /
 \    USART2_BRR
+$16d USART2_BRR !
 ;
