@@ -1,9 +1,0 @@
-include lib/graphic/Fonts/unicode-4x4.fs 
-include lib/graphic/Fonts/unicode-4x6.fs
-include lib/graphic/Fonts/unicode-8x8.fs 
-include lib/graphic/Fonts/unicode-8x16.fs 
-include lib/graphic/Fonts/ascii-6x8.fs 
-include lib/graphic/Fonts/ascii-c64.fs 
-
-include lib/graphic/charwriter.fs \ text output
-
