@@ -61,9 +61,14 @@ cornerstone eraseflash
 include ../lib/stm32/f4/rtc/rtc.fs
 include ../lib/stm32/f4/rtc/rtc_ui.fs
 \ graphics need cleanup, but hardware is working
-\ include ../lib/stm32/i2c-bb.fs
-\ include ../lib/ext/OLed/sh1106.fs
-\ include ../lib/graphics/graphics.fs \ small font
+\ include ../lib/stm32/i2c-bb.fs \ bit banged driver
+\ include ../lib/ext/OLed/sh1106.fs  \ OLED hardware driver
+\ include ../lib/ext/OLed/sdd1306.fs \ or this
+\ include ../lib/ext/OLed/ssd1327.fs \ or this
+\ include ../lib/graphic/graphics.fs \ line, ellipse, circle...
+\ include ../lib/graphic/Fonts/unicode-4x6.fs \ very small Fonts
+\ include ../lib/graphic/Fonts/unicode-8x8.fs \ very small Fonts
+
 
 ( board end: ) here dup hex.
 ( board size: ) swap - hex.
