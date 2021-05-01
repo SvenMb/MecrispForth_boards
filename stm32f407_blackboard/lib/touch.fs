@@ -36,6 +36,7 @@ SPI2 $0C + constant SPI2-DR
     1 14 lshift RCC_APB1ENR bis!  \ setSPI2EN
     $04 SPI2 bis!   \ MSTR in SPI_CR1
     $28 SPI2 bis!   \ spi speed 1/64 BR0:2  in SPI_CR1
+    \ $10 SPI2 bis!   \ spi speed 1/8 BR0:2  in SPI_CR1
     8 bit SPI2 bis! \ SSI  in SPI_CR1
     9 bit SPI2 bis! \ SSM  in SPI_CR1
     6 bit SPI2 bis! \ SPE - enable  in SPI_CR1
