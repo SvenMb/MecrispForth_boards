@@ -47,7 +47,7 @@
 336  6 lshift or  \ PLLN Main PLL multiplication factor for VCO - between 192 and 432 MHz
                   \ 1 MHz * 336 = 336 MHz
 
-  7 24 lshift or  \ PLLQ = 7, 336 MHz / 8 = 48 MHz
+  7 24 lshift or  \ PLLQ = 7, 336 MHz / 7 = 48 MHz
 
   0 16 lshift or  \ PLLP Division factor for main system clock
                   \ 0: /2  1: /4  2: /6  3: /8
