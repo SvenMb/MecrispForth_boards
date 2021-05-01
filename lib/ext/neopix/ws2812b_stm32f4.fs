@@ -268,41 +268,36 @@ $7a92764b variable seed
     prand um* nip
 ;
 
-\ fire demo
-\ : fire ( -- )
-\   begin
-\        MAX-LEDS 0 do
-\            60 prandrange 
-\                255 over - i 8 * - 0 max 255 min \ set 0 when <0, set 255 if > 255 
-\            swap 96 over - i 3 * - 0 max
-\            12 rot - i 12 32 */ - 0 max
-\            i setpixel
-\        loop
-\        led-show
-\        100 50 prandrange - ms
-\        key?
-\    until
-\    led-clear led-show
-\ ;
-
-\ new fire with adjustable colors
-
+\ fire and burn with adjustable colors
 : fire ( rgb -- rgb )
-        MAX-LEDS 0 do
-            60 prandrange >r
-            dup $FF0000 and 16 rshift dup r@ - swap i 32 */ - 0 max 255 min
-            over $00FF00 and 8 rshift dup r@ - swap i 32 */ - 0 max 255 min
-            2 pick $0000FF and        dup r> - swap i 32 */ - 0 max 255 min
-            i setpixel
-        loop
+    MAX-LEDS 0 do
+        60 prandrange >r
+        dup $FF0000 and 16 rshift        \ get red part
+           dup r@ -                      \ diff rnd
+           swap i 32 */ - 0 max 255 min  \ scale according to pos 
+        over $00FF00 and 8 rshift        \ get green part
+           dup r@ -
+           swap i 32 */ - 0 max 255 min
+        2 pick $0000FF and               \ get blue part
+           dup r> -
+           swap i 32 */ - 0 max 255 min
+        i setpixel                       \ write to strip-mem
+    loop
+    led-show
 ;
 
     
 : burn ( rgb -- )
     begin
+        [ifdef] readdht11
+            readdht11 @ if
+                0 readdht11 !
+                dht11@ humi ! temp !
+            then
+        [then]
         fire
-        led-show
         150 50 prandrange - ms
+        \ 200 ms
         key?
     until
     led-clear led-show
@@ -313,6 +308,32 @@ $7a92764b variable seed
 \ $FF6010 burn
 \ green fire example
 \ $60FF10 burn
+\ small blue example
+\ $101020 burn \ blue seems to be very strong
 
 
-        
+\ up-down runner demo
+: sec-cnt ( rgb index -- ) 
+    dup 29 > if
+        59 swap  -
+        swap drop
+        0 swap
+    then
+    setpix led-show
+;
+
+: led-run ( rgb -- )
+    begin
+        60 0 do
+            dup i sec-cnt 
+            200 ms
+        loop
+        key? \ should be done earlier, since it runs at least one complete loop
+    until
+    led-clear led-show
+    drop
+;
+
+
+
+

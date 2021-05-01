@@ -1,5 +1,6 @@
 \ interface to 128x128 ssd1327 OLED
 \ uses i2c
+\ and yes, I always use "lcd" even it is an OLed 
 
 $3c constant ssd1327
 
@@ -58,6 +59,8 @@ $3c constant ssd1327
     8192 0 do  dup c@ >i2c  1+ loop
     0 i2c-xfer drop drop ;
 
+\ simple logo from Jean Claude Wippler for testing ... 
+\ also avaiable via charwriter.fs + icons.fs
 create logo  \ 64x64 pixels
 binary
   00000000000000000000000000000111 , 11100000000000000000000000000000 ,
@@ -136,29 +139,30 @@ decimal
     loop
     8 +
   loop
-  drop display ;
+  drop display
+;
 
-: lcd-init2 ( -- )  \ initialise the oled display
-  i2c-init
-  $ae lcd!c           \ SET_DISP, # $ae Display off, $af display on
-  $15 lcd!c $00 lcd!c $7f lcd!c \ SET_COL_ADDR, ((128 - self.width) // 4), 63 - ((128 - self.width) // 4), (?)
-  $75 lcd!c $00 lcd!c $7f lcd!c \ SET_ROW_ADDR, 0x00, self.height - 1, (?)
-  $81 lcd!c $80 lcd!c \ SET_CONTRAST, 0x7f, # Medium brightness
-  $a0 lcd!c $51 lcd!c \ SET_SEG_REMAP, $51,
-  $a1 lcd!c $00 lcd!c \ SET_DISP_START_LINE, $00,
-  $a2 lcd!c $00 lcd!c \ SET_DISP_OFFSET, $20, # Set vertical offset by COM from 0~127 (!)changed
-  $a4 lcd!c           \ SET_DISP_MODE, # Normal, not inverted $a4, inverted $a7, all off $a6, all on $a5 
-  $a8 lcd!c $7f lcd!c \ SET_MUX_RATIO, self.height - 1,
-  $b1 lcd!c $f1 lcd!c \ SET_PHASE_LEN, 0x51, # Phase 1: 1 DCLK, Phase 2: 5 DCLKs
-  $b3 lcd!c $00 lcd!c \ SET_DISP_CLK_DIV, 0x01, # Divide ratio: 1, Oscillator Frequency: 0
-  $ab lcd!c $01 lcd!c \ SET_FN_SELECT_A, $01, # Enable internal VDD regulator
-  $b6 lcd!c $0f lcd!c \ SET_SECOND_PRECHARGE, 0x01, # Second Pre-charge period: 1 DCLK
-  $be lcd!c $0f lcd!c \ SET_VCOM_DESEL, 0x07, # Set VCOMH COM deselect voltage level: 0.86*Vcc
-  $bc lcd!c $08 lcd!c \ SET_PRECHARGE, 0x08, # Set pre-charge voltage level: VCOMH
-  $d5 lcd!c $62 lcd!c \ SET_FN_SELECT_B, 0x62, # Enable enternal VSL, Enable second precharge
-  $fd lcd!c $12 lcd!c \ SET_COMMAND_LOCK, $12, # Unlock
-  $af lcd!c           \ SET_DISP | 0x01): # Display on
- ;
+\ : lcd-init2 ( -- )  \ initialise the oled display
+\  i2c-init
+\  $ae lcd!c           \ SET_DISP, # $ae Display off, $af display on
+\  $15 lcd!c $00 lcd!c $7f lcd!c \ SET_COL_ADDR, ((128 - self.width) // 4), 63 -\ ((128 - self.width) // 4), (?)
+\  $75 lcd!c $00 lcd!c $7f lcd!c \ SET_ROW_ADDR, 0x00, self.height - 1, (?)
+\  $81 lcd!c $80 lcd!c \ SET_CONTRAST, 0x7f, # Medium brightness
+\  $a0 lcd!c $51 lcd!c \ SET_SEG_REMAP, $51,
+\  $a1 lcd!c $00 lcd!c \ SET_DISP_START_LINE, $00,
+\  $a2 lcd!c $00 lcd!c \ SET_DISP_OFFSET, $20, # Set vertical offset by COM from 0~127 (!)changed
+\  $a4 lcd!c           \ SET_DISP_MODE, # Normal, not inverted $a4, inverted $a7, all off $a6, all on $a5 
+\  $a8 lcd!c $7f lcd!c \ SET_MUX_RATIO, self.height - 1,
+\  $b1 lcd!c $f1 lcd!c \ SET_PHASE_LEN, 0x51, # Phase 1: 1 DCLK, Phase 2: 5 DCLKs
+\  $b3 lcd!c $00 lcd!c \ SET_DISP_CLK_DIV, 0x01, # Divide ratio: 1, Oscillator Frequency: 0
+\  $ab lcd!c $01 lcd!c \ SET_FN_SELECT_A, $01, # Enable internal VDD regulator
+\  $b6 lcd!c $0f lcd!c \ SET_SECOND_PRECHARGE, 0x01, # Second Pre-charge period: 1 DCLK
+\  $be lcd!c $0f lcd!c \ SET_VCOM_DESEL, 0x07, # Set VCOMH COM deselect voltage level: 0.86*Vcc
+\  $bc lcd!c $08 lcd!c \ SET_PRECHARGE, 0x08, # Set pre-charge voltage level: VCOMH
+\  $d5 lcd!c $62 lcd!c \ SET_FN_SELECT_B, 0x62, # Enable enternal VSL, Enable second precharge
+\  $fd lcd!c $12 lcd!c \ SET_COMMAND_LOCK, $12, # Unlock
+\  $af lcd!c           \ SET_DISP | 0x01): # Display on
+\ ;
 
   
   
