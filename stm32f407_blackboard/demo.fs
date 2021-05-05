@@ -13,8 +13,8 @@
         1 22 lshift exti_pr bit@ not if \ check if new second
             exit
         then
-        rtc-get-time ftime 254 223 drawstring
-        rtc-get-date fdate 254 232 drawstring
+        rtc-get-time ftime 250 223 drawstring
+        rtc-get-date fdate 240 232 drawstring
         [ifdef] LED0
             LED0 iox!
         [then]
@@ -28,18 +28,22 @@
 
 
 : demo ( -- )
-    tft-init tft-on
+    DISPLAY-init
+    DISPLAY-on
 
-    48 48 48 rgb2tft tft-bg !
+\    ['] ascii6x8 font-hook !
+    ['] fixed8x8 font-hook !
+
+    48 48 48 rgb2tft DISPLAY-bg !
     clear
-    $0000 tft-bg !
+    $0000 DISPLAY-bg !
     12 1 do $ffff 0 i 20 * 319 i 20 * rect loop
     16 1 do $ffff i 20 * 0 i 20 * 239 rect loop
     $0000 101 101 219 139 rect
     160 120 120 circle
     160 120 32 10 ellipse display
     160 120 34 12 ellipse display
-    s" Mecrisp" 140 116 drawstring display
+    s" Mecrisp" 134 116 drawstring display
     112 110 122 134 line display
     114 110 124 134 line display
     $ff $ff $ff rgb2tft  61 21 99 39 rect 
@@ -104,8 +108,8 @@
             LED1 ioc!
         [then]
         $0000 241 221 319 239 rect
-        rtc-get-time ftime 254 223 drawstring
-        rtc-get-date fdate 254 232 drawstring
+        rtc-get-time ftime 250 223 drawstring
+        rtc-get-date fdate 240 232 drawstring
 
         rtc-init
         CR ." RTC initialised"

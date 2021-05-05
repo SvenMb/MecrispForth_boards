@@ -23,16 +23,17 @@ $ff $00 $ff rgb2tft h, \
     swap drop \ throw x away
     dup 220 <
     if
-        20 / 2* panel + h@ tft-fg h!
+        20 / 2* panel + h@ DISPLAY-fg h!
     else
-        tft-fg h@ 0 0 299 239 rect 
+        DISPLAY-fg h@ 0 0 299 239 rect 
     then
 ;
 
 
 : tPaint ( -- )
-    $ffff tft-fg h!
-    $0000 tft-bg h!
+    ['] ascii6x8 font-hook !
+    $ffff DISPLAY-fg h!
+    $0000 DISPLAY-bg h!
     calibtouch
     clear
 
