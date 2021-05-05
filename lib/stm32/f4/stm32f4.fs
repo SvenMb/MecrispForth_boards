@@ -442,6 +442,13 @@ USART1 $18 + constant USART1_GTPR
 
 
 $40004400 constant USART2  
+USART2 $0 + constant USART2_SR
+USART2 $4 + constant USART2_DR
+USART2 $8 + constant USART2_BRR
+USART2 $C + constant USART2_CR1
+USART2 $10 + constant USART2_CR2
+USART2 $14 + constant USART2_CR3
+USART2 $18 + constant USART2_GTPR
 
 
 $40011400 constant USART6  

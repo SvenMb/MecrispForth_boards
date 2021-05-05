@@ -52,19 +52,23 @@
   0 16 lshift or  \ PLLP Division factor for main system clock
                   \ 0: /2  1: /4  2: /6  3: /8
                   \ 336 MHz / 2 = 168 MHz 
-  RCC_PLLCFGR !
+    RCC_PLLCFGR !
 
-  PLLON RCC_CR bis!
+    PLLON RCC_CR bis!
     \ Wait for PLL to lock:
     begin PLLRDY RCC_CR bit@ until
 
-  2                 \ Set PLL as clock source
-  %101 10 lshift or \ APB  Low speed prescaler (APB1) - Max 42 MHz ! Here 168/4 MHz = 42 MHz.
-  %100 13 lshift or \ APB High speed prescaler (APB2) - Max 84 MHz ! Here 168/2 MHz = 84 MHz.
-  RCC_CFGR !
-  168000000 dup clock-hz !
-  2 / uart1-baud @ / \ calculate divider ($2da for 115200) 
-  USART1_BRR ! \ Set Baud rate divider
+    2                 \ Set PLL as clock source
+    %101 10 lshift or \ APB  Low speed prescaler (APB1) - Max 42 MHz ! Here 168/4 MHz = 42 MHz.
+    %100 13 lshift or \ APB High speed prescaler (APB2) - Max 84 MHz ! Here 168/2 MHz = 84 MHz.
+    RCC_CFGR !
+    168000000 dup clock-hz !
+    2 / uart1-baud @ / \ calculate divider ($2da for 115200) 
+    USART1_BRR ! \ Set Baud rate divider
+
+    \ also set for UART2
+    $16d USART2_BRR ! \ Set Baud rate divider for 115200 Baud at 42 MHz. 22.786
+
 ;
 
 : 8MHz
