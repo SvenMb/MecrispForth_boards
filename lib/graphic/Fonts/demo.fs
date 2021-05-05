@@ -36,6 +36,7 @@
 : test_4x4
     \ DISPLAY-init
     clear
+    DISPLAY-on
     ['] fixed4x4 font-hook !
     0
     32 begin
@@ -56,12 +57,20 @@
             fixed4x4 2drop 2 + h@ \ next char
             swap 8 + swap          \ next pos
     repeat
-    DISPLAY-on
+    2drop
+    [ifdef] rgb2tft
+        $FF $20 $20 rgb2tft DISPLAY-fg !
+    [then]
+    s" <<< That's it. >>>" 0 232 drawstring
+    [ifdef] rgb2tft
+        $FF $FF $FF rgb2tft DISPLAY-fg !
+    [then]
 ;
 
 : test_4x6
     \ DISPLAY-init
     clear
+    DISPLAY-on
     ['] fixed4x6 font-hook !
     0
     32 begin
@@ -83,19 +92,32 @@
             swap 8 + swap         \ next pos
     repeat
     2drop \ drop pos, char
-    DISPLAY-on
+    [ifdef] rgb2tft
+        $FF $20 $20 rgb2tft DISPLAY-fg !
+    [then]
+    s" <<< That's it. >>>" 0 232 drawstring
+    [ifdef] rgb2tft
+        $FF $FF $FF rgb2tft DISPLAY-fg !
+    [then]
 ;
 
 : test_8x8
     \ DISPLAY-init
     \ touch-init
     clear
+    DISPLAY-on
     ['] fixed8x8 font-hook !
     0
     32 begin
         over    \ get next pos
         1159 > if         \ check if last pos
+            [ifdef] rgb2tft
+                $FF $20 $20 rgb2tft DISPLAY-fg !
+            [then]
              s" <<<touch or key for next>>>" 0 232 drawstring
+            [ifdef] rgb2tft
+                $FF $FF $FF rgb2tft DISPLAY-fg !
+            [then]
             nip 0 swap \ reset pos
             wait_touch 2drop
             clear
@@ -118,19 +140,33 @@
             swap 8 + swap         \ next pos
     repeat
     2drop
-    DISPLAY-on
+    [ifdef] rgb2tft
+        $FF $20 $20 rgb2tft DISPLAY-fg !
+    [then]
+    s" <<< That's it. >>>" 0 232 drawstring
+    [ifdef] rgb2tft
+        $FF $FF $FF rgb2tft DISPLAY-fg !
+    [then]
 ;
 
 : test_8x16
     \ DISPLAY-init
     \ touch-init
     clear
+    DISPLAY-on
     ['] fixed8x16 font-hook !
     0
     32 begin
         over    \ get next pos
         559 > if         \ check if last pos
+            [ifdef] rgb2tft
+                $FF $20 $20 rgb2tft DISPLAY-fg !
+            [then]
             s" <<<touch or key for next>>>" 0 224 drawstring
+            [ifdef] rgb2tft
+                $FF $FF $FF rgb2tft DISPLAY-fg !
+            [then]
+
             nip 0 swap \ reset pos
             wait_touch 2drop
             clear
@@ -148,11 +184,16 @@
         2 pick drawchar 2drop
         \ stack: pos char
         dup
-        .s
     while
             fixed8x16 2drop 16 + h@ \ next char
             swap 8 + swap         \ next pos
     repeat
     2drop
-    DISPLAY-on
+    [ifdef] rgb2tft
+        $FF $20 $20 rgb2tft DISPLAY-fg !
+    [then]
+    s" <<< That's it. >>>" 0 224 drawstring
+    [ifdef] rgb2tft
+        $FF $FF $FF rgb2tft DISPLAY-fg !
+    [then]
 ;
