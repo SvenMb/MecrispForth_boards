@@ -31,9 +31,9 @@
 \ hw 0 44 drawstring display
 
 
-\ demo
+\ font demo for 320 x 240 tft display
 
-: test_4x4
+: test4x4
     \ DISPLAY-init
     clear
     DISPLAY-on
@@ -41,7 +41,7 @@
     0
     32 begin
         over    \ get next pos
-        80 /mod \ 10 char per line
+        80 /mod \ char per line
         6 *     \ calc y
         swap 4 * swap \ calc x
         \ stack: pos char x y
@@ -67,7 +67,7 @@
     [then]
 ;
 
-: test_4x6
+: test4x6
     \ DISPLAY-init
     clear
     DISPLAY-on
@@ -75,7 +75,7 @@
     0
     32 begin
         over    \ get next pos
-        80 /mod \ 10 char per line
+        80 /mod \ char per line
         8 *     \ calc y
         swap 4 * swap \ calc x
         \ stack: pos char x y
@@ -101,7 +101,7 @@
     [then]
 ;
 
-: test_8x8
+: test8x8
     \ DISPLAY-init
     \ touch-init
     clear
@@ -123,7 +123,7 @@
             clear
         then
         over
-        40 /mod \ 10 char per line
+        40 /mod \ char per line
         8 *     \ calc y
         swap 8 * swap \ calc x
         \ stack: pos char x y
@@ -149,7 +149,7 @@
     [then]
 ;
 
-: test_8x16
+: test8x16
     \ DISPLAY-init
     \ touch-init
     clear
@@ -172,7 +172,7 @@
             clear
         then
         over
-        40 /mod \ 10 char per line
+        40 /mod \ char per line
         16 *     \ calc y
         swap 8 * swap \ calc x
         \ stack: pos char x y
