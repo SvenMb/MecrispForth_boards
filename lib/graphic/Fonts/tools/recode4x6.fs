@@ -1,5 +1,23 @@
 \ these tools where used to reencode some fonts
 
+: recode4x4 ( font-addr )
+    CR ." binary"
+    CR ." create font4x4"
+    binary
+    begin
+        CR
+        dup [char] $ emit h@ h.4 ."  h, "
+        dup 2+ c@ u.8
+        dup #3 + c@ u.8 ."  h,"
+    dup h@ while
+        #4 +
+    repeat
+    decimal
+    drop
+    CR ." decimal"
+    CR
+;
+
 \ changes byteorder for 4x6 font provided with mecrisp
 : recode4x6 ( font-addr )
 
