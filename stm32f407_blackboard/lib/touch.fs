@@ -210,7 +210,7 @@ tallsamp 2* buffer: tbufy \ buffer for halfwords y sampl
 \ calibrate touch screen
 : calibTouch ( -- )
     clear
-    tft-on
+    DISPLAY-on
 
     0 0 40 40 line
     40 0 0 40 line
@@ -288,7 +288,7 @@ tallsamp 2* buffer: tbufy \ buffer for halfwords y sampl
 
 \ small test programm
 : testTouch ( -- )
-    tft-on
+    DISPLAY-on
     begin
         wait_touch trxy
         if

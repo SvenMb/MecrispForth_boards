@@ -8,7 +8,12 @@ board | back | tft |tft back
 ## console connection
 
 serial connection:
- - USART1 PA9 - TX, PA10 - RX (extra serial header)
+
+ - USART2 PA2 - TX, PA3 - RX
+
+   or
+
+ - USART1 PA9 - TX, PA10 - RX (extra serial header, when using modified terminal.s)
 
 (usb-connection is currently not implemented)
 
@@ -19,7 +24,7 @@ He descibed this tool here: https://jeelabs.org/article/1718b/
 Currently it is hosted inside this archive: https://github.com/jcw/jcw.github.io/blob/main/zips/embello-2020-03-31.zip)
 
 ```bash
-\ flash forth kernel
+\ flash forth kernel (needs BT0 jumper set to high!)
 sudo dfu-util  -a 0 -d 0483:df11 -s 0x8000000:mass-erase:force -D stm32f407-ra/mecrisp-stellaris-stm32f407.bin
 
 # start serial connection to board, choose correct port when asked

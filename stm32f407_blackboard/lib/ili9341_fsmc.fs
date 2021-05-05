@@ -14,13 +14,22 @@ $60080000 constant TFT_ram \ A18 <-> RS stm32f407zet needs different addr!
 
 PB1 constant TFT_BL
 
+\ public:
 \ set colors
-$ffff variable tft-fg \ black background
-$0000 variable tft-bg \ white foreground
+$ffff variable DISPLAY-fg \ white foreground
+$0000 variable DISPLAY-bg \ black background
 
-\ cursor for tft-emit
-0 variable TFT-cursor 
+\ public:
+\ cursor for disp-emit
+0 variable DISPLAY-pos
 
+\ public
+\ tft size
+\ probaly not a good idea to make constants??? (pivot!)
+320 constant disp_x
+256 constant disp_y
+
+\ public:
 \ calculate tft 16bit color from rgb
 : rgb2tft ( r g b -- 16bit )
     $f8 and \ blue
@@ -33,22 +42,25 @@ $0000 variable tft-bg \ white foreground
     8 lshift or
 ;
 
+\ public:
 \ switch backlight on
-: TFT-on ( -- )
-    TFT_BL ios! 
+: DISPLAY-on ( -- )
+    TFT_BL ios!
 ;
 
+\ public:
 \ switch backlight on
-: TFT-off ( -- )
+: DISPLAY-off ( -- )
     omode-od TFT_BL io-mode!
     TFT_BL ioc! 
 ;
+
 
 \ initialises FSMC port on black board for stm32f407VET6
 : FSMC-init ( -- )
 
     \ TFT_BL init and off
-    TFT-off
+    DISPLAY-off
     
     \ enable peripheral clock (bit 0 FSMCEN)
     $01 RCC_AHB3ENR bis!
@@ -156,6 +168,7 @@ $0000 variable tft-bg \ white foreground
     swap
 ;
 
+\ public:
 \ write solid rectangle 
 : rect ( col x1 y1 x2 y2 -- )
     window
@@ -166,15 +179,16 @@ $0000 variable tft-bg \ white foreground
     loop drop
 ;
 
+\ public:
 \ clear screen with backgound color
 : clear ( -- )
-    tft-bg @ 0 0 320 240 rect \ for landscape
-    \ tft-bg @ 0 0 240 320 rect \ for portrait
-    0 TFT-cursor ! \ reset cursor 
+    DISPLAY-bg @ 0 0 disp_x 1- disp_y 1- rect \ for landscape
+    0 DISPLAY-pos ! \ reset cursor 
 ;
 
-\ initialises TFT, called after FSMC_init
-: TFT-init ( -- )
+\ public:
+\ initialises TFT
+: DISPLAY-init ( -- )
 
     FSMC-init
 
@@ -242,17 +256,115 @@ $0000 variable tft-bg \ white foreground
     clear
 ;
 
+\ public:
 \ set just one pixel, wrapper to rectangle
 : putpixel ( x y -- )
-    tft-fg @ -rot
+    DISPLAY-fg @ -rot
     2dup
     rect
 ;
 
+\ public:
+\ reset just one pixel, wrapper to rectangle
+: clrpixel
+    DISPLAY-bg @ -rot
+    2dup
+    rect
+;
+
+\ public:
 \ only for compatibility
 : display ( -- )
-    TFT-on \ just in case it is off
+    DISPLAY-on \ just in case it was off
     \ do nothing
+;
+
+\ -------------------------------------
+\ bitmap writer for font or icon usage
+\ -------------------------------------
+
+\ -------------------------------------------------------------
+\ font-hook
+\ provided function should be unicode aware
+\ (and should deliver 'unprintable>-char if it can't find the char)
+\ font-mapper synopsis:
+\ font-mapper ( uc -- c-addr width pixels )
+\ uc -> 16bit unicode char#
+\ c-addr -> begin of bytes for bitmap  
+\ width of that char
+\ pixel -> total amount of pixels of that char
+\ -------------------------------------------------------------
+
+\ initialization for some basic fonts if provided, else dummyfont
+[ifdef] fixed8x8 \ first choice
+    ['] fixed8x8
+[else]
+    [ifdef] fixed4x6 \ second choice
+        ['] fixed4x6
+    [else]
+        [ifdef] fixed8x16 \ last choice, else dummy
+            ['] fixed8x16
+        [else] \ no known font installed, create dummyfont
+            create dummyfont
+            $E0AAAA0E ,
+
+            : dummymap ( uc - c-addr width pixels )
+                drop
+                dummyfont 4 32
+            ;
+        
+            ['] dummymap
+        [then]
+    [then]
+[then]
+
+variable font-hook \ initialise with a known font
+
+\ -------------------------------------------------------------
+\  Write an Unicode character bitmap font
+\ -------------------------------------------------------------
+
+: drawbitmap ( x y c-addr width pixels -- )
+    >r >r        \ save pixels, width to return stack
+    -rot         \ put c-addr back
+    2r@ /        \ get pixels, width and calc delta y
+    \ stack: c-addr x y dy  rstack: pixels, width 
+    over + 1-    \ calc y2
+    \ stack: c-addr x y y2    
+    2 pick r> + 1- \ calc x2
+    swap         \ sort x2, y2
+    \ stack: c-addr x y x2 y2 rstack: pixels
+    window 2drop \ create window for pixmap on tft
+    $2c TFT_reg h!   \ fill cmd for tft
+    r>           \ get pixels
+    0 do
+        i 8 /mod \
+        2 pick +    \ calc c-addr for current bit
+        swap
+        \ stack: c-addr c-addr-bit bit#
+        negate 7 + \ wrong :) bitorder in provided fonts
+        bit swap cbit@  \ gen mask and get bit
+        if
+            DISPLAY-fg
+        else
+            DISPLAY-bg
+        then
+        @ TFT_ram h!
+    loop
+    drop \ drop c-addr
+;
+
+
+\ public:
+\ utf16 aware drawchar (not utf8, use drawchar_u8 or drawstring for that)
+: drawchar ( x y uc -- new_x new_y )
+    over  >r \ save y
+    2 pick >r \ save x
+    font-hook @ execute
+    \ stack: x y c-addr width pixels
+    over r> + >r \ calc new_x
+    drawbitmap
+    r> r> \ get new_x, y from r-stack
 ;
 
 ( TFT end:   ) here dup hex.
