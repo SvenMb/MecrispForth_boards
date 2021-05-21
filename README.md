@@ -3,6 +3,8 @@
 ### basis installations for some microcontroller boards with display via i2c or fsmc bus
 
  - stm32f407_blackboard is ready for use
+     * TFT/touch driver
+     * NRF24L01 work in progress 
  - stm32f411_blackpill is ready for use (documentation is a mess)
 
 ## Driver/Words for some peripherals
