@@ -2,9 +2,10 @@
 \ uses i2c
 \ and yes, I always use "lcd" even it is an OLed 
 
+\ i2c address
 $3c constant ssd1327
 
-\ 
+\  
 : lcd? ( -- f )  \ probe whether device exists, return true if it does
   ssd1327 i2c-addr 0 i2c-xfer 0= ;
 
@@ -14,13 +15,30 @@ $3c constant ssd1327
 \ the oled's display memory each byte is 2 pixel, 128x128 pixel
 8192 buffer: lcdmem
 
+\ public:
+\ set grey from $0 (black) to $f (white)
+$0f variable DISPLAY-fg
+$00 variable DISPLAY-bg
+
+\ public:
+\ cursor for disp-emit
+0 variable DISPLAY-pos
+
+\ public
+\ lcd size
+\ probaly not a good idea to make constants??? (pivot!)
+128 constant disp_x
+128 constant disp_y
+
 \ clear, putpixel, and display are used by the graphics.fs code
 : clear ( -- )  \ clear display memory
-  lcdmem 8192 0 fill ;
+    lcdmem 8192
+    DISPLAY-bg c@ dup 4 lshift or
+    fill ;
 
-: lcdfill ( c - ) \ fills all with 1
-  lcdmem 8192 rot fill
-;
+\ : lcdfill ( c - ) \ fills all with 1
+\   lcdmem 8192 rot fill
+\ ;
 
 \ greyscale g is $0 - $f
 : putpixelg ( g x y -- )  \ set a pixel in display memory with greyscale info
@@ -36,7 +54,7 @@ $3c constant ssd1327
 ;
 
 
-\
+\ public:
 : putpixel ( x y -- )  \ set a pixel in display memory
   6 lshift swap \ y is 64 times 
   dup shr
@@ -49,6 +67,7 @@ $3c constant ssd1327
   then
 ;
 
+\ public:
 : display ( -- )  \ update the oled from display memory
 
   $15 lcd!c $00 lcd!c $7F lcd!c \ SET_COL_ADDR, ((128 - self.width) // 4), 63 - ((128 - self.width) // 4),
@@ -165,8 +184,8 @@ decimal
 \ ;
 
   
-  
-: lcd-init ( -- )  \ initialise the oled display
+\ public
+: DISPLAY-init ( -- )  \ initialise the oled display
   i2c-init
   $fd lcd!c $12 lcd!c \ SET_COMMAND_LOCK, $12, # Unlock
   $ae lcd!c           \ SET_DISP, # $ae Display off, $af display on
