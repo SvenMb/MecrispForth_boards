@@ -223,6 +223,7 @@ include nrf24l01.fs
     drop
 ;
 
+\ switch on!
 : nrf24.powerUp ( -- )
     nrf24.CONFIG nrf24.r_register drop  \ read CONFIG
     dup $03 and not if  \ if not already powerup
@@ -234,6 +235,7 @@ include nrf24l01.fs
     then
 ;
 
+\ switch off for config
 : nrf24.powerDown ( -- )
     nrf24.CONFIG nrf24.r_register drop  \ read CONFIG
     dup $03 and if \ if not already TX and powerup
