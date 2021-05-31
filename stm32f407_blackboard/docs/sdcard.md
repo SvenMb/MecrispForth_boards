@@ -1,15 +1,15 @@
 ## pins for sdcard interface
 
-Using stm32-sdio-interface
+Using stm32-sdio-interface or optional SPI-Interface, SPI needs connections done externaly
 
-SDCARD       | STM32F407 | 
--------------|-----------|-----
-SDIO_D0      | PC8       |
+SDCARD       | STM32F407 |  spi pins (not connected!)
+-------------|-----------|---------------------------
+SDIO_D0      | PC8       | PC2 (miso)
 SDIO_D1      | PC9       |
 SDIO_D2      | PC10      |
-SDIO_D3 (CD) | PC11      |
-SDIO_SCK     | PC12      |
-SDIO_CMD     | PD2       |
+SDIO_D3 (CD) | PC11      | PC0  (cs)
+SDIO_SCK     | PC12      | PB10 (sck)
+SDIO_CMD     | PD2       | PC3  (mosi)
 
 TODO:
 * sdio_clk_enable
