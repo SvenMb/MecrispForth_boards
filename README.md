@@ -4,7 +4,8 @@
 
  - stm32f407_blackboard is ready for use
      * TFT/touch driver
-     * NRF24L01 work in progress 
+     * nRF24L01 work in progress 
+     * w25q16 SPI-flash driver
  - stm32f411_blackpill is ready for use (documentation is a mess)
 
 ## Driver/Words for some peripherals
