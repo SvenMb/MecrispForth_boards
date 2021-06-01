@@ -40,7 +40,7 @@ SPI1 $0C + constant SPI1-DR
 \ --- ODOT ---
     1 12 lshift RCC_APB2ENR bis!  \ set SPI1EN
     $04 SPI1 bis!   \ MSTR in SPI_CR1
-    \ expecting APB2 speed 84MHz setting to ~10MHz for nRF24 use 
+    \ expecting APB2 speed 84MHz setting to ~10MHz for nRF24 and w25q16 use 
     $10 SPI1 bis!   \ spi1 speed 1/8 BR0:2  in SPI_CR1
     8 bit SPI1 bis! \ SSI  in SPI_CR1
     9 bit SPI1 bis! \ SSM  in SPI_CR1
